@@ -4,6 +4,38 @@
   if(!isset($_SESSION)) session_start();
 
   // if(!isset($_SESSION['usr_id'])) header('Location: index.php');
+
+  if(isset($_POST['submit'])){
+		$nome = $_POST['nome'];
+		$sobrenome = $_POST['sobrenome'];
+		$email = $_POST['email'];
+		$senha = $_POST['pw'];
+		$senha_c = $_POST['c_pw'];
+
+		if(!preg_match("/^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/", $email)){
+			$_SESSION['cad_error'] = 4;
+		} else if(!preg_match("/^[a-zA-Z ]*$/", $nome) or !preg_match("/^[a-zA-Z ]*$/", $sobrenome)){
+			$_SESSION['cad_error'] = 5;
+		} else if(!preg_match("/^[0-9A-Za-z!@#$%]{8,32}$/", $senha)){
+			$_SESSION['cad_error'] = 3;
+		} else {
+			$sqlRegister = "SELECT id FROM usuarios WHERE email = '$email';";
+			$resultRegister = mysqli_query($con, $sqlRegister) or die("Falha na requisição do banco de dados");
+			$resultRegister = mysqli_fetch_array($resultRegister);
+
+			if(isset($result['id'])) $_SESSION['cad_error'] = 1;
+			else {
+				$senha = md5($senha);
+				$senha_c = md5($senha_c);
+
+				if($senha != $senha_c) $_SESSION['cad_error'] = 2;
+				else {
+					$sql = "INSERT INTO usuarios(nome, sobrenome, email, senha) VALUES('$nome', '$sobrenome', '$email', '$senha');";
+					mysqli_query($con, $sql) or die(mysqli_error($con));
+				}		
+			}
+		}
+	}
   
 ?>
 
@@ -63,11 +95,11 @@
           <li class="nav-item">
             <a class="nav-link nav-link-icon" href="register.php">
               <i class="ni ni-circle-08"></i>
-              <span class="nav-link-inner--text">Register</span>
+              <span class="nav-link-inner--text">Registrar</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link nav-link-icon" href="../examples/login.html">
+            <a class="nav-link nav-link-icon" href="login.php">
               <i class="ni ni-key-25"></i>
               <span class="nav-link-inner--text">Login</span>
             </a>
@@ -117,13 +149,70 @@
               <div class="text-center text-muted mb-4">
                 <small>Ou registre-se com suas credenciais</small>
               </div>
+              <?php
+                if(isset($_SESSION['cad_error'])) :
+                  switch($_SESSION['cad_error']){
+                    case 1:
+                      $text = 'Email já cadastrado';
+                      break;
+                    case 2:
+                      $text = 'Senhas não coincidem';
+                      break;
+                    case 3:
+                      $text = "Senha deve conter de 8 a 32 caracteres, podendo ser letras, números ou \"!@#$%\"";
+                      break;
+                    case 4:
+                      $text = "Email inválido";
+                      break;
+                    case 5:
+                      $text = "Nome e sobrenome devem conter apenas letras e espaço em branco";
+                      break;
+                    default:
+                      $text = "Erro";
+                      break;
+                  }
+              ?>
+                <script>
+                  $("document").ready(function(){
+                    swal({
+                      title: '<?= $text ?>',
+                      type: 'error',
+                      confirmButtonText: 'Fechar'
+                    });
+                  });
+                </script>
+              <?php
+                endif;
+
+                if(!isset($_SESSION['cad_error']) && isset($_POST['submit'])) :
+              ?>
+
+              <script>
+                $("document").ready(function(){
+                  swal({
+                    title: 'Seu cadastro foi efetuado com sucesso',
+                    text: 'Um link de confirmação foi enviado para seu email',
+                    type: 'success',
+                    confirmButtonText: 'Fechar',
+                    onClose: () => {
+                      window.location.href = 'login.php';
+                    }
+                  });
+                });
+              </script>
+
+              <?php
+                endif; 
+                $_SESSION['cad_error'] = NULL; 
+              ?>
+
               <form role="form">
                 <div class="form-group">
                   <div class="input-group input-group-alternative mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="ni ni-hat-3"></i></span>
                     </div>
-                    <input class="form-control" placeholder="Nome" type="text">
+                    <input name="nome" class="form-control" placeholder="Nome" type="text">
                   </div>
                 </div>
                 <div class="form-group">
@@ -131,7 +220,7 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="ni ni-email-83"></i></span>
                     </div>
-                    <input class="form-control" placeholder="Email" type="email">
+                    <input name="email" class="form-control" placeholder="Email" type="email">
                   </div>
                 </div>
                 <div class="form-group">
@@ -139,7 +228,7 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
                     </div>
-                    <input class="form-control" placeholder="Senha" type="pw">
+                    <input type="password" class="form-control" placeholder="Senha" type="pw">
                   </div>
                 </div>
                 <div class="form-group">
@@ -147,7 +236,7 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
                     </div>
-                    <input class="form-control" placeholder="Confirmar senha" type="c_pw">
+                    <input type="password" class="form-control" placeholder="Confirmar senha" type="c_pw">
                   </div>
                 </div>
                 <!-- <div class="text-muted font-italic"><small>password strength: <span class="text-success font-weight-700">strong</span></small></div> -->
@@ -155,14 +244,14 @@
                   <div class="col-12">
                     <div class="custom-control custom-control-alternative custom-checkbox">
                       <input class="custom-control-input" id="customCheckRegister" type="checkbox">
-                      <label class="custom-control-label" for="customCheckRegister">
+                      <label class="custom-control-label" for="customCheckRegister" required>
                         <span class="text-muted">Eu concordo com os termos <a href="#!">Privacidade</a></span>
                       </label>
                     </div>
                   </div>
                 </div>
                 <div class="text-center">
-                  <button type="button" class="btn btn-primary mt-4">Criar conta</button>
+                  <button type="submit" class="btn btn-primary mt-4">Criar conta</button>
                 </div>
               </form>
             </div>
