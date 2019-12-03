@@ -91,26 +91,26 @@
     <a class=" nav-link active " href=" index.php"> <i class="ni ni-tv-2 text-primary"></i> Página principal
       </a>
     </li>
-    <li class="nav-item">
+    <!-- <li class="nav-item">
       <a class="nav-link " href="icons.html">
         <i class="ni ni-planet text-blue"></i> Icones
       </a>
-    </li>
-    <li class="nav-item">
+    </li> -->
+    <!-- <li class="nav-item">
       <a class="nav-link " href="maps.html">
         <i class="ni ni-pin-3 text-orange"></i> Mapas
       </a>
-    </li>
+    </li> -->
     <li class="nav-item">
       <a class="nav-link " href="profile.php">
         <i class="ni ni-single-02 text-yellow"></i> Perfil
       </a>
     </li>
-    <li class="nav-item">
+    <!-- <li class="nav-item">
       <a class="nav-link " href="tables.html">
         <i class="ni ni-bullet-list-67 text-red"></i> Tabelas
       </a>
-    </li>
+    </li> -->
     <li class="nav-item">
       <a class="nav-link" href="login.php">
         <i class="ni ni-key-25 text-info"></i> Entrar

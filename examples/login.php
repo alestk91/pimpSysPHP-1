@@ -3,7 +3,25 @@
 
   if(!isset($_SESSION)) session_start();
 
-  $title = "Login"
+  if(isset($_SESSION['usr_id'])){
+		header('Location: index.php');
+	} else {
+		if(isset($_POST['submit'])){
+			$email = mysqli_real_escape_string($con, $_POST['email']);
+			$senha = mysqli_real_escape_string($con, $_POST['pw']);
+			$senha = md5($senha);
+
+			$sqlLogin = "SELECT id, status FROM usuarios WHERE email = '$email' AND senha = '$senha';";
+			$resultLogin = mysqli_query($con, $sqlLogin);
+			$linha = mysqli_fetch_array($resultLogin);
+
+			if(isset($linha['id'])){
+				$_SESSION['usr_id'] = $linha['id'];
+				$_SESSION['sts_cli'] = $linha['status'];
+				header('Location: index.php');
+			} else $_SESSION['login_error'] = 1;
+		}
+	}
 ?>
 
 <!--
@@ -26,7 +44,7 @@
 
 <head>
 
-  <title><?= $title ?></title>
+  <title><?= $title = "Login" ?></title>
 
   <?php include("../templates/head.html")?>
 </head>
@@ -67,12 +85,12 @@
                 <span class="nav-link-inner--text">Register</span>
               </a>
             </li>
-            <li class="nav-item">
+            <!-- <li class="nav-item">
               <a class="nav-link nav-link-icon" href="../examples/login.html">
                 <i class="ni ni-key-25"></i>
                 <span class="nav-link-inner--text">Login</span>
               </a>
-            </li>
+            </li> -->
           </ul>
         </div>
       </div>
@@ -117,6 +135,31 @@
               <div class="text-center text-muted mb-4">
                 <small>Ou entre com seus dados</small>
               </div>
+              <?php
+                if(isset($_SESSION['login_error'])) :
+                  switch($_SESSION['login_error']){
+                    case 1:
+                      $text = 'Email e/ou senha incorreta';
+                      break;
+                    default:
+                      $text = "Erro";
+                      break;
+                  }
+              ?>
+                <script>
+                  $("document").ready(function(){
+                    swal({
+                      title: '<?= $text ?>',
+                      type: 'error',
+                      confirmButtonText: 'Fechar'
+                    });
+                  });
+                </script>
+              <?php
+                endif;
+
+                $_SESSION['login_error'] = NULL;
+              ?>
               <form role="form">
                 <div class="form-group mb-3">
                   <div class="input-group input-group-alternative">

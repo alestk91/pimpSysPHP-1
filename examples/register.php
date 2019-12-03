@@ -3,7 +3,8 @@
 
   if(!isset($_SESSION)) session_start();
 
-  $title = "Registrar";
+  if(!isset($_SESSION['usr_id'])) header('Location: index.php');
+  
 ?>
 
 <!--
@@ -25,6 +26,7 @@
 <html lang="en">
 
 <head>
+  <title><?= $title = "Registrar";?></title>
   <?php include("../templates/head.html") ?>
 </head>
 

@@ -3,7 +3,8 @@
 
   if(!isset($_SESSION)) session_start();
 
-  $title = "PimpSYS";
+  // if(!isset($_SESSION['usr_id'])) header('Location: login.php');
+  
 ?>
 
 <!--
@@ -26,7 +27,7 @@
 
 <head>
   
-  <title><?= $title ?></title>
+  <title><?= $title = "PimpSYS";?></title>
 
   <?php include("../templates/head.html")?>
 </head>
