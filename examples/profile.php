@@ -3,6 +3,8 @@
 
   if(!isset($_SESSION)) session_start();
 
+  // if(!isset($_SESSION['usr_id'])) header('Location: login.php');
+
   $title = "Perfil";
 ?>
 
@@ -140,7 +142,7 @@
                     <div class="col-lg-6">
                       <div class="form-group">
                         <label class="form-control-label" for="input-email">Email</label>
-                        <input type="email" id="input-email" class="form-control form-control-alternative" placeholder="jesse@example.com">
+                        <input type="email" id="input-email" class="form-control form-control-alternative" placeholder="vinicius.pucci@example.com" disabled=" ">
                       </div>
                     </div>
                   </div>
@@ -148,13 +150,19 @@
                     <div class="col-lg-6">
                       <div class="form-group">
                         <label class="form-control-label" for="input-first-name">Nome</label>
-                        <input type="text" id="input-first-name" class="form-control form-control-alternative" placeholder="First name" value="Lucky">
+                        <input type="text" id="input-first-name" class="form-control form-control-alternative" placeholder="First name" value="Vinicius" disabled=" ">
                       </div>
                     </div>
                     <div class="col-lg-6">
                       <div class="form-group">
                         <label class="form-control-label" for="input-last-name">Sobrenome</label>
-                        <input type="text" id="input-last-name" class="form-control form-control-alternative" placeholder="Last name" value="Jesse">
+                        <input type="text" id="input-last-name" class="form-control form-control-alternative" placeholder="Last name" value="Pucci" disabled=" ">
+                      </div>
+                    </div>
+                    <div class="col-lg-6">
+                      <div class="form-group">
+                        <label class="form-control-label" for="input-username">Nível</label>
+                        <input type="text" id="input-username" class="form-control form-control-alternative" placeholder="Username" value="Administrador" disabled=" " >
                       </div>
                     </div>
                   </div>

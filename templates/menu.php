@@ -46,12 +46,12 @@
       </a>
       <a href="profile.php" class="dropdown-item">
         <i class="ni ni-support-16"></i>
-        <span>Support</span>
+        <span>Suporte</span>
       </a>
       <div class="dropdown-divider"></div>
-      <a href="#!" class="dropdown-item">
+      <a href="../php/logout.php" class="dropdown-item">
         <i class="ni ni-user-run"></i>
-        <span>Logout</span>
+        <span>Sair</span>
       </a>
     </div>
   </li>
@@ -106,11 +106,11 @@
         <i class="ni ni-single-02 text-yellow"></i> Perfil
       </a>
     </li>
-    <!-- <li class="nav-item">
-      <a class="nav-link " href="tables.html">
+    <li class="nav-item">
+      <a class="nav-link " href="tables.php">
         <i class="ni ni-bullet-list-67 text-red"></i> Tabelas
       </a>
-    </li> -->
+    </li>
     <li class="nav-item">
       <a class="nav-link" href="login.php">
         <i class="ni ni-key-25 text-info"></i> Entrar
@@ -125,24 +125,25 @@
   <!-- Divider -->
   <hr class="my-3">
   <!-- Heading -->
-  <h6 class="navbar-heading text-muted">Documentation</h6>
-  <!-- Navigation -->
-  <ul class="navbar-nav mb-md-3">
-    <li class="nav-item">
-      <a class="nav-link" href="https://demos.creative-tim.com/argon-dashboard/docs/getting-started/overview.html">
-        <i class="ni ni-spaceship"></i> Getting started
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="https://demos.creative-tim.com/argon-dashboard/docs/foundation/colors.html">
-        <i class="ni ni-palette"></i> Foundation
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="https://demos.creative-tim.com/argon-dashboard/docs/components/alerts.html">
-        <i class="ni ni-ui-04"></i> Components
-      </a>
-    </li>
-  </ul>
-</div>
+  <?php //if($_SESSION['sts_cli'] == 2) : ?>
+    <h6 class="navbar-heading text-muted">Documentation</h6>
+    <!-- Navigation -->
+    <ul class="navbar-nav mb-md-3">
+      <li class="nav-item">
+        <a class="nav-link" href="https://demos.creative-tim.com/argon-dashboard/docs/getting-started/overview.html">
+          <i class="ni ni-spaceship"></i> Getting started
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="https://demos.creative-tim.com/argon-dashboard/docs/foundation/colors.html">
+          <i class="ni ni-palette"></i> Foundation
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="https://demos.creative-tim.com/argon-dashboard/docs/components/alerts.html">
+          <i class="ni ni-ui-04"></i> Components
+        </a>
+      </li>
+    </ul>
+  <?php // endif ?>
 </div>
