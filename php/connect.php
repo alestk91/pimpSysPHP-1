@@ -1,8 +1,8 @@
 <?php
-    $host = '';
-    $user = '';
+    $host = 'localhost';
+    $user = 'root';
     $pw = '';
-    $schema = '';
+    $schema = 'pimpsys';
 
     $con = mysqli_connect($host, $user, $pw, $schema) or die('Falha ao conectar ao banco de dados');
 ?>
