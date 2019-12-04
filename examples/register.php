@@ -18,7 +18,7 @@
 		} else if(!preg_match("/^[0-9A-Za-z!@#$%]{8,32}$/", $senha)){
 			$_SESSION['cad_error'] = 3;
 		} else {
-			$sqlRegister = "SELECT _iduser FROM tbusers WHERE email = '$email';";
+			$sqlRegister = "SELECT _iduser FROM tbusers WHERE email = '$email' OR user = '$username';";
 			$resultRegister = mysqli_query($con, $sqlRegister) or die("Falha na requisição do banco de dados");
 			$resultRegister = mysqli_fetch_array($resultRegister);
 
@@ -152,7 +152,7 @@
                 if(isset($_SESSION['cad_error'])) :
                   switch($_SESSION['cad_error']){
                     case 1:
-                      $text = 'Email já cadastrado';
+                      $text = 'Email ou username já cadastrado';
                       break;
                     case 2:
                       $text = 'Senhas não coincidem';
