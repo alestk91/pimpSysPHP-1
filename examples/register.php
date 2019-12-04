@@ -6,32 +6,31 @@
   // if(!isset($_SESSION['usr_id'])) header('Location: index.php');
 
   if(isset($_POST['submit'])){
-		$nome = $_POST['nome'];
-		$sobrenome = $_POST['sobrenome'];
+		$username = $_POST['username'];
 		$email = $_POST['email'];
 		$senha = $_POST['pw'];
 		$senha_c = $_POST['c_pw'];
 
 		if(!preg_match("/^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/", $email)){
 			$_SESSION['cad_error'] = 4;
-		} else if(!preg_match("/^[a-zA-Z ]*$/", $nome) or !preg_match("/^[a-zA-Z ]*$/", $sobrenome)){
+		} else if(!preg_match("/^[a-zA-Z ]*$/", $username)){
 			$_SESSION['cad_error'] = 5;
 		} else if(!preg_match("/^[0-9A-Za-z!@#$%]{8,32}$/", $senha)){
 			$_SESSION['cad_error'] = 3;
 		} else {
-			$sqlRegister = "SELECT id FROM usuarios WHERE email = '$email';";
+			$sqlRegister = "SELECT _iduser FROM tbusers WHERE email = '$email' OR user = '$username';";
 			$resultRegister = mysqli_query($con, $sqlRegister) or die("Falha na requisição do banco de dados");
 			$resultRegister = mysqli_fetch_array($resultRegister);
 
-			if(isset($result['id'])) $_SESSION['cad_error'] = 1;
+			if(isset($resultRegister['_iduser'])) $_SESSION['cad_error'] = 1;
 			else {
 				$senha = md5($senha);
 				$senha_c = md5($senha_c);
 
 				if($senha != $senha_c) $_SESSION['cad_error'] = 2;
 				else {
-					$sql = "INSERT INTO usuarios(nome, sobrenome, email, senha) VALUES('$nome', '$sobrenome', '$email', '$senha');";
-					mysqli_query($con, $sql) or die(mysqli_error($con));
+					$sqlUser = "INSERT INTO `tbusers`(`_idcompany`, `user`, `password`, `email`) VALUES(1, '$username', '$senha', '$email');";
+					mysqli_query($con, $sqlUser) or die(mysqli_error($con));
 				}		
 			}
 		}
@@ -153,7 +152,7 @@
                 if(isset($_SESSION['cad_error'])) :
                   switch($_SESSION['cad_error']){
                     case 1:
-                      $text = 'Email já cadastrado';
+                      $text = 'Email ou username já cadastrado';
                       break;
                     case 2:
                       $text = 'Senhas não coincidem';
@@ -173,13 +172,11 @@
                   }
               ?>
                 <script>
-                  $("document").ready(function(){
-                    swal({
-                      title: '<?= $text ?>',
-                      type: 'error',
-                      confirmButtonText: 'Fechar'
-                    });
-                  });
+                  Swal.fire({
+                    icon: 'error',
+                    title: '<?= $text ?>',
+                    confirmButtonText: 'Fechar'
+                  })
                 </script>
               <?php
                 endif;
@@ -188,17 +185,15 @@
               ?>
 
               <script>
-                $("document").ready(function(){
-                  swal({
-                    title: 'Seu cadastro foi efetuado com sucesso',
-                    text: 'Um link de confirmação foi enviado para seu email',
-                    type: 'success',
-                    confirmButtonText: 'Fechar',
-                    onClose: () => {
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Seu cadastro foi efetuado com sucesso',
+                  text: 'Um link de confirmação foi enviado para seu email',
+                  confirmButtonText: 'Fechar',
+                  onClose: () => {
                       window.location.href = 'login.php';
                     }
-                  });
-                });
+                })
               </script>
 
               <?php
@@ -206,13 +201,13 @@
                 $_SESSION['cad_error'] = NULL; 
               ?>
 
-              <form role="form">
+              <form action="#" method="POST">
                 <div class="form-group">
                   <div class="input-group input-group-alternative mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="ni ni-hat-3"></i></span>
                     </div>
-                    <input name="nome" class="form-control" placeholder="Nome" type="text">
+                    <input name="username" class="form-control" placeholder="Username" type="text">
                   </div>
                 </div>
                 <div class="form-group">
@@ -228,7 +223,7 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
                     </div>
-                    <input type="password" class="form-control" placeholder="Senha" type="pw">
+                    <input type="password" class="form-control" placeholder="Senha" name="pw">
                   </div>
                 </div>
                 <div class="form-group">
@@ -236,7 +231,7 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
                     </div>
-                    <input type="password" class="form-control" placeholder="Confirmar senha" type="c_pw">
+                    <input type="password" class="form-control" placeholder="Confirmar senha" name="c_pw">
                   </div>
                 </div>
                 <!-- <div class="text-muted font-italic"><small>password strength: <span class="text-success font-weight-700">strong</span></small></div> -->
@@ -251,7 +246,7 @@
                   </div>
                 </div>
                 <div class="text-center">
-                  <button type="submit" class="btn btn-primary mt-4">Criar conta</button>
+                  <button type="submit" class="btn btn-primary mt-4" name="submit">Criar conta</button>
                 </div>
               </form>
             </div>

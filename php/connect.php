@@ -1,5 +1,5 @@
 <?php
-
+//Quando for usar favor tirar dessa function 
 function connect()
 {
     $host = ''; //hostname
