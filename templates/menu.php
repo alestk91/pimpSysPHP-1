@@ -1,3 +1,10 @@
+<?php
+  require('../php/connect.php');
+
+  if(!isset($_SESSION)) session_start();
+
+  if(!isset($_SESSION['usr_id'])) header('Location: login.php');
+?>
 <div class="container-fluid">
 <!-- Toggler -->
 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidenav-collapse-main" aria-controls="sidenav-main" aria-expanded="false" aria-label="Toggle navigation">
@@ -111,16 +118,18 @@
         <i class="ni ni-bullet-list-67 text-red"></i> Tabelas
       </a>
     </li>
-    <li class="nav-item">
-      <a class="nav-link" href="login.php">
-        <i class="ni ni-key-25 text-info"></i> Entrar
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="register.php">
-        <i class="ni ni-circle-08 text-pink"></i> Registrar
-      </a>
-    </li>
+    <?php if(!isset($_SESSION['usr_id'])) :?>
+      <li class="nav-item">
+        <a class="nav-link" href="login.php">
+          <i class="ni ni-key-25 text-info"></i> Entrar
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="register.php">
+          <i class="ni ni-circle-08 text-pink"></i> Registrar
+        </a>
+      </li>
+    <?php endif ?>
   </ul>
   <!-- Divider -->
   <hr class="my-3">
