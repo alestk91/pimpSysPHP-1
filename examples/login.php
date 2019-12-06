@@ -11,11 +11,11 @@
 			$senha = mysqli_real_escape_string($con, $_POST['pw']);
 			$senha = md5($senha);
 
-			$sqlLogin = "SELECT user, ur.name, u._iduser, u.email, ur._iduserrole 
+			$sqlLogin = "SELECT user, ur.name, u._iduser, u.email, ur._iduserrole, u.password 
                   FROM tbusers AS u 
                   INNER JOIN tbastuser_roles AS r ON u._idUser = r._idUser 
                   INNER JOIN tbuserroles AS ur ON ur._idUserRole = r._idUserRole 
-                  WHERE user = '$username' AND password = '$senha';";
+                  WHERE u.user = '$username' AND u.password = '$senha';";
 			$resultLogin = mysqli_query($con, $sqlLogin);
 			$linha = mysqli_fetch_array($resultLogin);
 
@@ -143,7 +143,7 @@
                 if(isset($_SESSION['login_error'])) :
                   switch($_SESSION['login_error']){
                     case 1:
-                      $text = 'Email e/ou senha incorreta';
+                      $text = 'Username e/ou senha incorreta';
                       break;
                     default:
                       $text = "Erro";
@@ -151,12 +151,10 @@
                   }
               ?>
                 <script>
-                  $("document").ready(function(){
-                    swal({
-                      title: '<?= $text ?>',
-                      type: 'error',
-                      confirmButtonText: 'Fechar'
-                    });
+                  Swal.fire({
+                    icon: 'error',
+                    title: '<?= $text ?>',
+                    confirmButtonText: 'Fechar'
                   });
                 </script>
               <?php
