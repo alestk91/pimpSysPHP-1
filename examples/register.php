@@ -4,10 +4,13 @@
   if(!isset($_SESSION)) session_start();
 
   // if(!isset($_SESSION['usr_id'])) header('Location: index.php');
+  $sqlCompany = "SELECT _idCompany, companyname FROM tbcompanies";
+  $resultCompany = mysqli_query($con, $sqlCompany) or die("Falha ao encontrar companias");
 
   if(isset($_POST['submit'])){
 		$username = $_POST['username'];
-		$email = $_POST['email'];
+    $email = $_POST['email'];
+    $company = $_POST['company'];
 		$senha = $_POST['pw'];
 		$senha_c = $_POST['c_pw'];
 
@@ -29,7 +32,7 @@
 
 				if($senha != $senha_c) $_SESSION['cad_error'] = 2;
 				else {
-					$sqlUser = "INSERT INTO `tbusers`(`_idcompany`, `user`, `password`, `email`) VALUES(1, '$username', '$senha', '$email');";
+					$sqlUser = "INSERT INTO `tbusers`(`_idcompany`, `user`, `password`, `email`) VALUES('$company', '$username', '$senha', '$email');";
 					mysqli_query($con, $sqlUser) or die(mysqli_error($con));
 				}		
 			}
@@ -217,6 +220,14 @@
                     </div>
                     <input name="email" class="form-control" placeholder="Email" type="email">
                   </div>
+                </div>
+                <div class="form-group">
+                  <select name="company" class="form-control" id="exampleFormControlSelect1">
+                    <option disable>Compania</option>
+                    <?php while($company = mysqli_fetch_array($resultCompany)) : ?>
+                      <option value="<?php echo $company['_idCompany']?>"><?php echo $company['companyname']?></option>
+                    <?php endwhile ?>
+                  </select>
                 </div>
                 <div class="form-group">
                   <div class="input-group input-group-alternative">
