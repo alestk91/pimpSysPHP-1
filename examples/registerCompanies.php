@@ -12,9 +12,9 @@
 
   if(isset($_POST['submit'])){
 		$username = $_POST['username'];
-    $email = $_POST['email'];
-    $company = $_POST['company'];
-    $level = $_POST['level'];
+        $email = $_POST['email'];
+        $company = $_POST['company'];
+        $level = $_POST['level'];
 		$senha = $_POST['pw'];
 		$senha_c = $_POST['c_pw'];
 
@@ -121,7 +121,7 @@
           <div class="row justify-content-center">
             <div class="col-lg-5 col-md-6">
               <h1 class="text-white">Bem-vindo!</h1>
-              <p class="text-lead text-light">Registro de funcionários</p>
+              <p class="text-lead text-light">Registro de companias</p>
             </div>
           </div>
         </div>
@@ -180,6 +180,41 @@
               window.location.href = 'login.php';
             }
         })
+        // $(document).ready(function(){
+        //     $('.date').mask('00/00/0000');
+        //     $('.time').mask('00:00:00');
+        //     $('.date_time').mask('00/00/0000 00:00:00');
+        //     $('.cep').mask('00000-000');
+        //     $('.phone').mask('0000-0000');
+        //     $('.phone_with_ddd').mask('(00) 0000-0000');
+        //     $('.phone_us').mask('(000) 000-0000');
+        //     $('.mixed').mask('AAA 000-S0S');
+        //     $('.cpf').mask('000.000.000-00', {reverse: true});
+        //     $('.cnpj').inputmask('00.000.000/0000-00', {reverse: true});
+        //     $('.money').mask('000.000.000.000.000,00', {reverse: true});
+        //     $('.money2').mask("#.##0,00", {reverse: true});
+        //     $('.ip_address').mask('0ZZ.0ZZ.0ZZ.0ZZ', {
+        //       translation: {
+        //         'Z': {
+        //           pattern: /[0-9]/, optional: true
+        //         }
+        //       }
+        //     });
+        //     $('.ip_address').mask('099.099.099.099');
+        //     $('.percent').mask('##0,00%', {reverse: true});
+        //     $('.clear-if-not-match').mask("00/00/0000", {clearIfNotMatch: true});
+        //     $('.placeholder').mask("00/00/0000", {placeholder: "__/__/____"});
+        //     $('.fallback').mask("00r00r0000", {
+        //         translation: {
+        //           'r': {
+        //             pattern: /[\/]/,
+        //             fallback: '/'
+        //           },
+        //           placeholder: "__/__/____"
+        //         }
+        //       });
+        //     $('.selectonfocus').mask("00/00/0000", {selectOnFocus: true});
+        //   });
       </script>
 
       <?php
@@ -197,9 +232,25 @@
                 <div class="form-group">
                   <div class="input-group input-group-alternative mb-3">
                     <div class="input-group-prepend">
-                      <span class="input-group-text"><i class="ni ni-hat-3"></i></span>
+                      <span class="input-group-text"><i class="ni ni-circle-08"></i></span>
                     </div>
-                    <input name="username" class="form-control" placeholder="Username" type="text">
+                    <input name="nameComp" class="form-control" placeholder="Nome da empresa" type="text">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="input-group input-group-alternative mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="ni ni-badge"></i></span>
+                    </div>
+                    <input name="cnpj" class="form-control" placeholder="CNPJ" type="text">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="input-group input-group-alternative mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="ni ni-mobile-button"></i></span>
+                    </div>
+                    <input name="telComp" class="form-control" placeholder="Telefone" type="text">
                   </div>
                 </div>
                 <div class="form-group">
@@ -207,62 +258,13 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="ni ni-email-83"></i></span>
                     </div>
-                    <input name="email" class="form-control" placeholder="Email" type="email">
+                    <input name="emailComp" class="form-control" placeholder="Email" type="text">
                   </div>
                 </div>
-                <div class="form-group">
-                  <div class="input-group input-group-alternative">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
-                    </div>
-                    <input type="password" class="form-control" placeholder="Senha" name="pw">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <div class="input-group input-group-alternative">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
-                    </div>
-                    <input type="password" class="form-control" placeholder="Confirmar senha" name="c_pw">
-                  </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary mt-4" name="submit">Cadastrar empresa</button>
                 </div>
                 <!-- <div class="text-muted font-italic"><small>password strength: <span class="text-success font-weight-700">strong</span></small></div> -->
-                </div>
-                <div class="card-body px-lg-5 py-lg-5">
-                  <div class="text-center text-muted mb-4">
-                    <small>Dados níveis</small>
-                  </div>
-                  <div class="form-group">
-                    <select name="company" class="form-control" id="exampleFormControlSelect1">
-                      <option disable>Compania</option>
-                      <?php while($company = mysqli_fetch_array($resultCompany)) : ?>
-                        <option value="<?php echo $company['_idCompany']?>"><?php echo $company['companyname']?></option>
-                      <?php endwhile ?>
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <select name="level" class="form-control" id="exampleFormControlSelect1">
-                      <option disable>Níveis</option>
-                      <?php while($level = mysqli_fetch_array($resultLevelSelect)) : ?>
-                        <option value="<?php echo $level['_iduserroles']?>"><?php echo $level['name']?></option>
-                      <?php endwhile ?>
-                    </select>
-                  </div>
-                  <!-- <div class="text-muted font-italic"><small>password strength: <span class="text-success font-weight-700">strong</span></small></div> -->
-                  <div class="row my-4">
-                    <div class="col-12">
-                      <div class="custom-control custom-control-alternative custom-checkbox">
-                        <input class="custom-control-input" id="customCheckRegister" type="checkbox">
-                        <label class="custom-control-label" for="customCheckRegister" required>
-                          <span class="text-muted">Eu concordo com os termos <a href="#!">Privacidade</a></span>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="text-center">
-                    <button type="submit" class="btn btn-primary mt-4" name="submit">Criar conta</button>
-                  </div>
-                </div>
               </form>
             </div>
           </div>
@@ -301,6 +303,7 @@
   </div>
   <!--   Core   -->
   <?php include("../templates/loadScripts.html")?>
+  
 </body>
 
 </html>
