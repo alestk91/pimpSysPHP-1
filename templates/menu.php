@@ -124,12 +124,12 @@
           <i class="ni ni-key-25 text-info"></i> Entrar
         </a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="register.php">
-          <i class="ni ni-circle-08 text-pink"></i> Registrar
-        </a>
-      </li>
     <?php endif ?>
+    <li class="nav-item">
+      <a class="nav-link" href="registerCompanies.php">
+        <i class="ni ni-circle-08 text-blue"></i> Registrar compania
+      </a>
+    </li>
   </ul>
   <!-- Divider -->
   <hr class="my-3">
