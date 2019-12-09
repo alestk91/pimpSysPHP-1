@@ -85,12 +85,12 @@
           </div>
           <!-- Navbar items -->
           <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
+            <!-- <li class="nav-item">
               <a class="nav-link nav-link-icon" href="register.php">
                 <i class="ni ni-circle-08"></i>
                 <span class="nav-link-inner--text">Register</span>
               </a>
-            </li>
+            </li> -->
             <!-- <li class="nav-item">
               <a class="nav-link nav-link-icon" href="../examples/login.html">
                 <i class="ni ni-key-25"></i>
@@ -108,7 +108,8 @@
           <div class="row justify-content-center">
             <div class="col-lg-5 col-md-6">
               <h1 class="text-white">Bem-vindo!</h1>
-              <p class="text-lead text-light">Entre no nosso sistema para blablabla</p>
+              <p class="text-lead text-light">Entre no sistema para ter acesso as suas informações</p>
+              <small style="text-color: black"> Caso não tenha login, entre em contato com nossa empresa!</small>
             </div>
           </div>
         </div>
@@ -198,7 +199,7 @@
               <a href="#" class="text-light"><small>Esqueceu sua senha?</small></a>
             </div>
             <div class="col-6 text-right">
-              <a href="register.php" class="text-light"><small>Cadastrar</small></a>
+              <a href="#" class="text-light"><small>Contato</small></a>
             </div>
           </div>
         </div>
