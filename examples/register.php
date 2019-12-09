@@ -97,18 +97,28 @@
           </div>
         </div>
         <!-- Navbar items -->
+        <?php if(!isset($_SESSION['usr_id'])) : ?>
+          <ul class="navbar-nav ml-auto">
+              <li class="nav-item">
+                  <a class="nav-link nav-link-icon" href="register.php">
+                  <i class="ni ni-circle-08"></i>
+                  <span class="nav-link-inner--text">Registrar</span>
+                  </a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link nav-link-icon" href="login.php">
+                  <i class="ni ni-key-25"></i>
+                  <span class="nav-link-inner--text">Login</span>
+                  </a>
+              </li>
+          </ul>
+      <?php endif ?>
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a class="nav-link nav-link-icon" href="register.php">
-              <i class="ni ni-circle-08"></i>
-              <span class="nav-link-inner--text">Registrar</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link nav-link-icon" href="login.php">
-              <i class="ni ni-key-25"></i>
-              <span class="nav-link-inner--text">Login</span>
-            </a>
+              <a class="nav-link nav-link-icon" href="index.php">
+              <i class="ni ni-world"></i>
+              <span class="nav-link-inner--text">Página inicial</span>
+              </a>
           </li>
         </ul>
       </div>
@@ -260,7 +270,7 @@
                     </div>
                   </div>
                   <div class="text-center">
-                    <button type="submit" class="btn btn-primary mt-4" name="submit">Criar conta</button>
+                    <button type="submit" class="btn btn-primary mt-4" name="submit">Adicionar funcionário</button>
                   </div>
                 </div>
               </form>

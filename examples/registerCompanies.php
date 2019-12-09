@@ -3,42 +3,31 @@
 
   if(!isset($_SESSION)) session_start();
 
-  // if(!isset($_SESSION['usr_id'])) header('Location: index.php');
-  $sqlCompany = "SELECT _idCompany, companyname FROM tbcompanies";
-  $resultCompany = mysqli_query($con, $sqlCompany) or die("Falha ao encontrar companias");
+  if(!isset($_SESSION['usr_id'])) header('Location: index.php');
 
-  $sqlLevelSelect = "SELECT _idUserRole, name FROM tbuserroles"; 
-  $resultLevelSelect = mysqli_query($con, $sqlLevelSelect) or die("Falha ao encontrar os níveis");
+  if($_SESSION['sts_cli'] != '1') header('Location: index.php');
 
   if(isset($_POST['submit'])){
-		$username = $_POST['username'];
-        $email = $_POST['email'];
-        $company = $_POST['company'];
-        $level = $_POST['level'];
-		$senha = $_POST['pw'];
-		$senha_c = $_POST['c_pw'];
+		$nomeComp = $_POST['nameComp'];
+        $cnpjComp = $_POST['cnpjComp'];
+        $telComp = $_POST['telComp'];
+        $emailComp = $_POST['emailComp'];
 
-		if(!preg_match("/^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/", $email)){
+		if(!preg_match("/^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/", $emailComp)){
 			$_SESSION['cad_error'] = 4;
-		} else if(!preg_match("/^[a-zA-Z ]*$/", $username)){
+		} else if(!preg_match("/^[a-zA-Z ]*$/", $nomeComp)){
 			$_SESSION['cad_error'] = 5;
-		} else if(!preg_match("/^[0-9A-Za-z!@#$%]{8,32}$/", $senha)){
-			$_SESSION['cad_error'] = 3;
 		} else {
-			$sqlRegister = "SELECT _iduser FROM tbusers WHERE email = '$email' OR user = '$username';";
-			$resultRegister = mysqli_query($con, $sqlRegister) or die("Falha na requisição do banco de dados");
-			$resultRegister = mysqli_fetch_array($resultRegister);
+			$sqlRegisterComp = "SELECT _idCompany 
+            FROM tbcompanies 
+            WHERE companyName = '$nomeComp' OR cnpj = '$cnpjComp'";
+			$resultRegisterComp = mysqli_query($con, $sqlRegisterComp) or die(mysqli_error($con));
+			$resultRegisterComp = mysqli_fetch_array($resultRegisterComp);
 
-			if(isset($resultRegister['_iduser'])) $_SESSION['cad_error'] = 1;
+			if(isset($resultRegisterComp['_idCompany'])) $_SESSION['cad_error'] = 1;
 			else {
-				$senha = md5($senha);
-				$senha_c = md5($senha_c);
-
-				if($senha != $senha_c) $_SESSION['cad_error'] = 2;
-				else {
-					$sqlUser = "INSERT INTO `tbusers`(`_idcompany`, `user`, `password`, `email`) VALUES('$company', '$username', '$senha', '$email');";
-          $resultUser = mysqli_query($con, $sqlUser) or die(mysqli_error($con));
-				}		
+                $sqlInsertComp = "INSERT INTO `tbcompanies`(`companyName`, `cnpj`, `telephone`, `email`) VALUES('$nomeComp', '$cnpjComp', '$telComp', '$emailComp');";
+                $resultInsertComp = mysqli_query($con, $sqlInsertComp) or die(mysqli_error($con));
 			}
 		}
 	}
@@ -64,7 +53,7 @@
 <html lang="en">
 
 <head>
-  <title><?= $title = "Registrar";?></title>
+  <title><?= $title = "Registro de companias";?></title>
   <?php include("../templates/head.html") ?>
 </head>
 
@@ -97,18 +86,28 @@
           </div>
         </div>
         <!-- Navbar items -->
+        <?php if(!isset($_SESSION['usr_id'])) : ?>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link nav-link-icon" href="register.php">
+                    <i class="ni ni-circle-08"></i>
+                    <span class="nav-link-inner--text">Registrar</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-link-icon" href="login.php">
+                    <i class="ni ni-key-25"></i>
+                    <span class="nav-link-inner--text">Login</span>
+                    </a>
+                </li>
+            </ul>
+        <?php endif ?>
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a class="nav-link nav-link-icon" href="register.php">
-              <i class="ni ni-circle-08"></i>
-              <span class="nav-link-inner--text">Registrar</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link nav-link-icon" href="login.php">
-              <i class="ni ni-key-25"></i>
-              <span class="nav-link-inner--text">Login</span>
-            </a>
+              <a class="nav-link nav-link-icon" href="index.php">
+              <i class="ni ni-world"></i>
+              <span class="nav-link-inner--text">Página inicial</span>
+              </a>
           </li>
         </ul>
       </div>
@@ -138,7 +137,7 @@
         if(isset($_SESSION['cad_error'])) :
           switch($_SESSION['cad_error']){
             case 1:
-              $text = 'Email ou username já cadastrado';
+              $text = 'Nome ou CNPJ já utilizado';
               break;
             case 2:
               $text = 'Senhas não coincidem';
@@ -173,11 +172,11 @@
       <script>
         Swal.fire({
           icon: 'success',
-          title: 'Seu cadastro foi efetuado com sucesso',
-          text: 'Um link de confirmação foi enviado para seu email',
-          confirmButtonText: 'Fechar',
+          title: 'Cadastro da empresa feito com sucesso!',
+          text: 'Um link para autenticação será enviado para o email cadastrado',
+          confirmButtonText: 'Cadastrar funcionários!',
           onClose: () => {
-              window.location.href = 'login.php';
+                window.location.href = 'register.php';
             }
         })
         // $(document).ready(function(){
@@ -227,7 +226,7 @@
         <div class="col-lg-6 col-md-8">
           <div class="card bg-secondary shadow border-0">
             <div class="card-header bg-transparent pb-5">
-              <div class="text-muted text-center mt-2 mb-4"><small>Dados pessoais</small></div>
+              <div class="text-muted text-center mt-2 mb-4"><small>Dados da empresa</small></div>
               <form action="#" method="POST">
                 <div class="form-group">
                   <div class="input-group input-group-alternative mb-3">
@@ -242,7 +241,7 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="ni ni-badge"></i></span>
                     </div>
-                    <input name="cnpj" class="form-control" placeholder="CNPJ" type="text">
+                    <input name="cnpjComp" class="form-control" placeholder="CNPJ" type="text">
                   </div>
                 </div>
                 <div class="form-group">

@@ -73,7 +73,7 @@
               <div class="col-lg-3 order-lg-2">
                 <div class="card-profile-image">
                   <a href="#">
-                    <img src="../assets/img/theme/team-4-800x800.jpg" class="rounded-circle">
+                    <img alt="Image placeholder" src="../assets/img/theme/bootstrap.jpg">
                   </a>
                 </div>
               </div>
