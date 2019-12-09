@@ -187,7 +187,7 @@
           text: 'Um link de confirmação foi enviado para seu email',
           confirmButtonText: 'Fechar',
           onClose: () => {
-              window.location.href = 'login.php';
+              window.location.href = 'register.php';
             }
         })
       </script>

@@ -4,6 +4,8 @@
   if(!isset($_SESSION)) session_start();
 
   if(!isset($_SESSION['usr_id'])) header('Location: login.php');
+
+  if(!isset($_SESSION['comp_id'])) header('Location: login.php');
 ?>
 
 
