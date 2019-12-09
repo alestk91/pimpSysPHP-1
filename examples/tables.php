@@ -6,13 +6,18 @@
   if(!isset($_SESSION['usr_id'])) header('Location: login.php');
 
   if($_SESSION['sts_cli'] != '1') header('Location: index.php');
-  
-  $id = $_SESSION['usr_id'];
 
-  $sqlTable = "SELECT user, ur.name, u._iduser, u.email FROM tbusers AS u 
+  if(!isset($_SESSION['comp_id'])) header('Location: login.php');
+  
+  $id = $_SESSION['comp_id'];
+
+  $sqlTable = "SELECT user, ur.name, u._iduser, u.email, c._idCompany, c.companyName  
+  FROM tbusers AS u 
   INNER JOIN tbastuser_roles AS r ON u._idUser = r._idUser 
-  INNER JOIN tbuserroles AS ur ON ur._idUserRole = r._idUserRole";
-  $resultTable = mysqli_query($con,$sqlTable) or die('Falha ao buscar perfil');
+  INNER JOIN tbuserroles AS ur ON ur._idUserRole = r._idUserRole
+  INNER JOIN tbcompanies AS c ON u._idCompany = c._idCompany
+  WHERE c._idCompany = '$id'";
+  $resultTable = mysqli_query($con,$sqlTable) or die(mysqli_error($con));
 
 ?>
 <!--

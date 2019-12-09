@@ -11,17 +11,19 @@
 			$senha = mysqli_real_escape_string($con, $_POST['pw']);
 			$senha = md5($senha);
 
-			$sqlLogin = "SELECT user, ur.name, u._iduser, u.email, ur._iduserrole, u.password 
+			$sqlLogin = "SELECT user, ur.name, u._iduser, u.email, ur._iduserrole, u.password, c._idCompany, c.companyName 
                   FROM tbusers AS u 
                   INNER JOIN tbastuser_roles AS r ON u._idUser = r._idUser 
-                  INNER JOIN tbuserroles AS ur ON ur._idUserRole = r._idUserRole 
+                  INNER JOIN tbuserroles AS ur ON ur._idUserRole = r._idUserRole
+                  INNER JOIN tbcompanies AS c ON u._idCompany = c._idCompany
                   WHERE u.user = '$username' AND u.password = '$senha';";
 			$resultLogin = mysqli_query($con, $sqlLogin);
 			$linha = mysqli_fetch_array($resultLogin);
 
 			if(isset($linha['_iduser'])){
 				$_SESSION['usr_id'] = $linha['_iduser'];
-				$_SESSION['sts_cli'] = $linha['_iduserrole'];
+        $_SESSION['sts_cli'] = $linha['_iduserrole'];
+        $_SESSION['comp_id'] = $linha['_idCompany'];
 				header('Location: index.php');
 			} else $_SESSION['login_error'] = 1;
 		}

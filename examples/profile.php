@@ -4,12 +4,16 @@
   if(!isset($_SESSION)) session_start();
 
   if(!isset($_SESSION['usr_id'])) header('Location: login.php');
+
+  if(!isset($_SESSION['comp_id'])) header('Location: login.php');
   
   $id = $_SESSION['usr_id'];
 
-  $sqlProfile = "SELECT user, ur.name, u._iduser, u.email FROM tbusers AS u 
+  $sqlProfile = "SELECT user, ur.name, u._iduser, u.email, c._idCompany, c.companyName 
+  FROM tbusers AS u 
   INNER JOIN tbastuser_roles AS r ON u._idUser = r._idUser 
-  INNER JOIN tbuserroles AS ur ON ur._idUserRole = r._idUserRole 
+  INNER JOIN tbuserroles AS ur ON ur._idUserRole = r._idUserRole
+  INNER JOIN tbcompanies AS c ON u._idCompany = c._idCompany 
   WHERE u._iduser = $id";
   $resultProfile = mysqli_query($con,$sqlProfile) or die('Falha ao buscar perfil');
 
@@ -171,6 +175,12 @@
                           <div class="form-group">
                             <label class="form-control-label" for="input-username">Nível</label>
                             <input type="text" id="input-username" class="form-control form-control-alternative"  value="<?= $usuarioProfile['name']?>" disabled=" " >
+                          </div>
+                        </div>
+                        <div class="col-lg-6">
+                          <div class="form-group">
+                            <label class="form-control-label" for="input-username">Companhia</label>
+                            <input type="text" id="input-username" class="form-control form-control-alternative"  value="<?= $usuarioProfile['companyName']?>" disabled=" " >
                           </div>
                         </div>
                       </div>
