@@ -4,34 +4,40 @@
   if(!isset($_SESSION)) session_start();
 
   // if(!isset($_SESSION['usr_id'])) header('Location: index.php');
+  $sqlCompany = "SELECT _idCompany, companyname FROM tbcompanies";
+  $resultCompany = mysqli_query($con, $sqlCompany) or die("Falha ao encontrar companias");
+
+  $sqlLevelSelect = "SELECT _idUserRole, name FROM tbuserroles"; 
+  $resultLevelSelect = mysqli_query($con, $sqlLevelSelect) or die("Falha ao encontrar os níveis");
 
   if(isset($_POST['submit'])){
-		$nome = $_POST['nome'];
-		$sobrenome = $_POST['sobrenome'];
-		$email = $_POST['email'];
+		$username = $_POST['username'];
+    $email = $_POST['email'];
+    $company = $_POST['company'];
+    $level = $_POST['level'];
 		$senha = $_POST['pw'];
 		$senha_c = $_POST['c_pw'];
 
 		if(!preg_match("/^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/", $email)){
 			$_SESSION['cad_error'] = 4;
-		} else if(!preg_match("/^[a-zA-Z ]*$/", $nome) or !preg_match("/^[a-zA-Z ]*$/", $sobrenome)){
+		} else if(!preg_match("/^[a-zA-Z ]*$/", $username)){
 			$_SESSION['cad_error'] = 5;
 		} else if(!preg_match("/^[0-9A-Za-z!@#$%]{8,32}$/", $senha)){
 			$_SESSION['cad_error'] = 3;
 		} else {
-			$sqlRegister = "SELECT id FROM usuarios WHERE email = '$email';";
+			$sqlRegister = "SELECT _iduser FROM tbusers WHERE email = '$email' OR user = '$username';";
 			$resultRegister = mysqli_query($con, $sqlRegister) or die("Falha na requisição do banco de dados");
 			$resultRegister = mysqli_fetch_array($resultRegister);
 
-			if(isset($result['id'])) $_SESSION['cad_error'] = 1;
+			if(isset($resultRegister['_iduser'])) $_SESSION['cad_error'] = 1;
 			else {
 				$senha = md5($senha);
 				$senha_c = md5($senha_c);
 
 				if($senha != $senha_c) $_SESSION['cad_error'] = 2;
 				else {
-					$sql = "INSERT INTO usuarios(nome, sobrenome, email, senha) VALUES('$nome', '$sobrenome', '$email', '$senha');";
-					mysqli_query($con, $sql) or die(mysqli_error($con));
+					$sqlUser = "INSERT INTO `tbusers`(`_idcompany`, `user`, `password`, `email`) VALUES('$company', '$username', '$senha', '$email');";
+          $resultUser = mysqli_query($con, $sqlUser) or die(mysqli_error($con));
 				}		
 			}
 		}
@@ -58,7 +64,7 @@
 <html lang="en">
 
 <head>
-  <title><?= $title = "Registrar";?></title>
+  <title><?= $title = "Registrar funcionário";?></title>
   <?php include("../templates/head.html") ?>
 </head>
 
@@ -91,18 +97,28 @@
           </div>
         </div>
         <!-- Navbar items -->
+        <?php if(!isset($_SESSION['usr_id'])) : ?>
+          <ul class="navbar-nav ml-auto">
+              <li class="nav-item">
+                  <a class="nav-link nav-link-icon" href="register.php">
+                  <i class="ni ni-circle-08"></i>
+                  <span class="nav-link-inner--text">Registrar</span>
+                  </a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link nav-link-icon" href="login.php">
+                  <i class="ni ni-key-25"></i>
+                  <span class="nav-link-inner--text">Login</span>
+                  </a>
+              </li>
+          </ul>
+      <?php endif ?>
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a class="nav-link nav-link-icon" href="register.php">
-              <i class="ni ni-circle-08"></i>
-              <span class="nav-link-inner--text">Registrar</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link nav-link-icon" href="login.php">
-              <i class="ni ni-key-25"></i>
-              <span class="nav-link-inner--text">Login</span>
-            </a>
+              <a class="nav-link nav-link-icon" href="index.php">
+              <i class="ni ni-world"></i>
+              <span class="nav-link-inner--text">Página inicial</span>
+              </a>
           </li>
         </ul>
       </div>
@@ -115,7 +131,7 @@
           <div class="row justify-content-center">
             <div class="col-lg-5 col-md-6">
               <h1 class="text-white">Bem-vindo!</h1>
-              <p class="text-lead text-light">Aqui a gente irá escrever algo bem legal</p>
+              <p class="text-lead text-light">Registro de funcionários</p>
             </div>
           </div>
         </div>
@@ -128,91 +144,72 @@
     </div>
     <!-- Page content -->
     <div class="container mt--8 pb-5">
+    <?php
+        if(isset($_SESSION['cad_error'])) :
+          switch($_SESSION['cad_error']){
+            case 1:
+              $text = 'Email ou username já cadastrado';
+              break;
+            case 2:
+              $text = 'Senhas não coincidem';
+              break;
+            case 3:
+              $text = "Senha deve conter de 8 a 32 caracteres, podendo ser letras, números ou \"!@#$%\"";
+              break;
+            case 4:
+              $text = "Email inválido";
+              break;
+            case 5:
+              $text = "Nome e sobrenome devem conter apenas letras e espaço em branco";
+              break;
+            default:
+              $text = "Erro";
+              break;
+          }
+      ?>
+        <script>
+          Swal.fire({
+            icon: 'error',
+            title: '<?= $text ?>',
+            confirmButtonText: 'Fechar'
+          })
+        </script>
+      <?php
+        endif;
+
+        if(!isset($_SESSION['cad_error']) && isset($_POST['submit'])) :
+      ?>
+
+      <script>
+        Swal.fire({
+          icon: 'success',
+          title: 'Seu cadastro foi efetuado com sucesso',
+          text: 'Um link de confirmação foi enviado para seu email',
+          confirmButtonText: 'Fechar',
+          onClose: () => {
+              window.location.href = 'register.php';
+            }
+        })
+      </script>
+
+      <?php
+        endif; 
+        $_SESSION['cad_error'] = NULL; 
+      ?>
+
       <!-- Table -->
       <div class="row justify-content-center">
         <div class="col-lg-6 col-md-8">
           <div class="card bg-secondary shadow border-0">
             <div class="card-header bg-transparent pb-5">
-              <div class="text-muted text-center mt-2 mb-4"><small>Entre com</small></div>
-              <div class="text-center">
-                <a href="#" class="btn btn-neutral btn-icon mr-4">
-                  <span class="btn-inner--icon"><img src="../assets/img/icons/common/github.svg"></span>
-                  <span class="btn-inner--text">Github</span>
-                </a>
-                <a href="#" class="btn btn-neutral btn-icon">
-                  <span class="btn-inner--icon"><img src="../assets/img/icons/common/google.svg"></span>
-                  <span class="btn-inner--text">Google</span>
-                </a>
-              </div>
-            </div>
-            <div class="card-body px-lg-5 py-lg-5">
-              <div class="text-center text-muted mb-4">
-                <small>Ou registre-se com suas credenciais</small>
-              </div>
-              <?php
-                if(isset($_SESSION['cad_error'])) :
-                  switch($_SESSION['cad_error']){
-                    case 1:
-                      $text = 'Email já cadastrado';
-                      break;
-                    case 2:
-                      $text = 'Senhas não coincidem';
-                      break;
-                    case 3:
-                      $text = "Senha deve conter de 8 a 32 caracteres, podendo ser letras, números ou \"!@#$%\"";
-                      break;
-                    case 4:
-                      $text = "Email inválido";
-                      break;
-                    case 5:
-                      $text = "Nome e sobrenome devem conter apenas letras e espaço em branco";
-                      break;
-                    default:
-                      $text = "Erro";
-                      break;
-                  }
-              ?>
-                <script>
-                  $("document").ready(function(){
-                    swal({
-                      title: '<?= $text ?>',
-                      type: 'error',
-                      confirmButtonText: 'Fechar'
-                    });
-                  });
-                </script>
-              <?php
-                endif;
-
-                if(!isset($_SESSION['cad_error']) && isset($_POST['submit'])) :
-              ?>
-
-              <script>
-                $("document").ready(function(){
-                  swal({
-                    title: 'Seu cadastro foi efetuado com sucesso',
-                    text: 'Um link de confirmação foi enviado para seu email',
-                    type: 'success',
-                    confirmButtonText: 'Fechar',
-                    onClose: () => {
-                      window.location.href = 'login.php';
-                    }
-                  });
-                });
-              </script>
-
-              <?php
-                endif; 
-                $_SESSION['cad_error'] = NULL; 
-              ?>
-
-              <form role="form">
+              <div class="text-muted text-center mt-2 mb-4"><small>Dados pessoais</small></div>
+              <form action="#" method="POST">
                 <div class="form-group">
                   <div class="input-group input-group-alternative mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="ni ni-hat-3"></i></span>
                     </div>
-                    <input name="nome" class="form-control" placeholder="Nome" type="text">
+                    <input name="username" class="form-control" placeholder="Username" type="text">
                   </div>
                 </div>
                 <div class="form-group">
@@ -228,7 +225,7 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
                     </div>
-                    <input type="password" class="form-control" placeholder="Senha" type="pw">
+                    <input type="password" class="form-control" placeholder="Senha" name="pw">
                   </div>
                 </div>
                 <div class="form-group">
@@ -236,22 +233,45 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
                     </div>
-                    <input type="password" class="form-control" placeholder="Confirmar senha" type="c_pw">
+                    <input type="password" class="form-control" placeholder="Confirmar senha" name="c_pw">
                   </div>
                 </div>
                 <!-- <div class="text-muted font-italic"><small>password strength: <span class="text-success font-weight-700">strong</span></small></div> -->
-                <div class="row my-4">
-                  <div class="col-12">
-                    <div class="custom-control custom-control-alternative custom-checkbox">
-                      <input class="custom-control-input" id="customCheckRegister" type="checkbox">
-                      <label class="custom-control-label" for="customCheckRegister" required>
-                        <span class="text-muted">Eu concordo com os termos <a href="#!">Privacidade</a></span>
-                      </label>
+                </div>
+                <div class="card-body px-lg-5 py-lg-5">
+                  <div class="text-center text-muted mb-4">
+                    <small>Dados níveis</small>
+                  </div>
+                  <div class="form-group">
+                    <select name="company" class="form-control" id="exampleFormControlSelect1">
+                      <option disable>Companhia</option>
+                      <?php while($company = mysqli_fetch_array($resultCompany)) : ?>
+                        <option value="<?php echo $company['_idCompany']?>"><?php echo $company['companyname']?></option>
+                      <?php endwhile ?>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <select name="level" class="form-control" id="exampleFormControlSelect1">
+                      <option disable>Níveis</option>
+                      <?php while($level = mysqli_fetch_array($resultLevelSelect)) : ?>
+                        <option value="<?php echo $level['_iduserroles']?>"><?php echo $level['name']?></option>
+                      <?php endwhile ?>
+                    </select>
+                  </div>
+                  <!-- <div class="text-muted font-italic"><small>password strength: <span class="text-success font-weight-700">strong</span></small></div> -->
+                  <div class="row my-4">
+                    <div class="col-12">
+                      <div class="custom-control custom-control-alternative custom-checkbox">
+                        <input class="custom-control-input" id="customCheckRegister" type="checkbox">
+                        <label class="custom-control-label" for="customCheckRegister" required>
+                          <span class="text-muted">Eu concordo com os termos <a href="#!">Privacidade</a></span>
+                        </label>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div class="text-center">
-                  <button type="submit" class="btn btn-primary mt-4">Criar conta</button>
+                  <div class="text-center">
+                    <button type="submit" class="btn btn-primary mt-4" name="submit">Adicionar funcionário</button>
+                  </div>
                 </div>
               </form>
             </div>

@@ -7,17 +7,23 @@
 		header('Location: index.php');
 	} else {
 		if(isset($_POST['submit'])){
-			$email = mysqli_real_escape_string($con, $_POST['email']);
+			$username = mysqli_real_escape_string($con, $_POST['username']);
 			$senha = mysqli_real_escape_string($con, $_POST['pw']);
 			$senha = md5($senha);
 
-			$sqlLogin = "SELECT id, status FROM usuarios WHERE email = '$email' AND senha = '$senha';";
+			$sqlLogin = "SELECT user, ur.name, u._iduser, u.email, ur._iduserrole, u.password, c._idCompany, c.companyName 
+                  FROM tbusers AS u 
+                  INNER JOIN tbastuser_roles AS r ON u._idUser = r._idUser 
+                  INNER JOIN tbuserroles AS ur ON ur._idUserRole = r._idUserRole
+                  INNER JOIN tbcompanies AS c ON u._idCompany = c._idCompany
+                  WHERE u.user = '$username' AND u.password = '$senha';";
 			$resultLogin = mysqli_query($con, $sqlLogin);
 			$linha = mysqli_fetch_array($resultLogin);
 
-			if(isset($linha['id'])){
-				$_SESSION['usr_id'] = $linha['id'];
-				$_SESSION['sts_cli'] = $linha['status'];
+			if(isset($linha['_iduser'])){
+				$_SESSION['usr_id'] = $linha['_iduser'];
+        $_SESSION['sts_cli'] = $linha['_iduserrole'];
+        $_SESSION['comp_id'] = $linha['_idCompany'];
 				header('Location: index.php');
 			} else $_SESSION['login_error'] = 1;
 		}
@@ -79,12 +85,12 @@
           </div>
           <!-- Navbar items -->
           <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
+            <!-- <li class="nav-item">
               <a class="nav-link nav-link-icon" href="register.php">
                 <i class="ni ni-circle-08"></i>
                 <span class="nav-link-inner--text">Register</span>
               </a>
-            </li>
+            </li> -->
             <!-- <li class="nav-item">
               <a class="nav-link nav-link-icon" href="../examples/login.html">
                 <i class="ni ni-key-25"></i>
@@ -102,7 +108,8 @@
           <div class="row justify-content-center">
             <div class="col-lg-5 col-md-6">
               <h1 class="text-white">Bem-vindo!</h1>
-              <p class="text-lead text-light">Entre no nosso sistema para blablabla</p>
+              <p class="text-lead text-light">Entre no sistema para ter acesso as suas informações</p>
+              <small style="text-color: black"> Caso não tenha login, entre em contato com nossa empresa!</small>
             </div>
           </div>
         </div>
@@ -139,7 +146,7 @@
                 if(isset($_SESSION['login_error'])) :
                   switch($_SESSION['login_error']){
                     case 1:
-                      $text = 'Email e/ou senha incorreta';
+                      $text = 'Username e/ou senha incorreta';
                       break;
                     default:
                       $text = "Erro";
@@ -147,12 +154,10 @@
                   }
               ?>
                 <script>
-                  $("document").ready(function(){
-                    swal({
-                      title: '<?= $text ?>',
-                      type: 'error',
-                      confirmButtonText: 'Fechar'
-                    });
+                  Swal.fire({
+                    icon: 'error',
+                    title: '<?= $text ?>',
+                    confirmButtonText: 'Fechar'
                   });
                 </script>
               <?php
@@ -160,13 +165,13 @@
 
                 $_SESSION['login_error'] = NULL;
               ?>
-              <form role="form">
+              <form method="POST" action="#">
                 <div class="form-group mb-3">
                   <div class="input-group input-group-alternative">
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="ni ni-email-83"></i></span>
                     </div>
-                    <input class="form-control" placeholder="Email" type="email">
+                    <input name="username" class="form-control" placeholder="Username" type="text">
                   </div>
                 </div>
                 <div class="form-group">
@@ -174,7 +179,7 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
                     </div>
-                    <input class="form-control" placeholder="Password" type="password">
+                    <input name="pw" class="form-control" placeholder="Password" type="password">
                   </div>
                 </div>
                 <div class="custom-control custom-control-alternative custom-checkbox">
@@ -184,7 +189,7 @@
                   </label>
                 </div>
                 <div class="text-center">
-                  <button type="submit" class="btn btn-primary my-4">Entrar</button>
+                  <button name="submit" type="submit" class="btn btn-primary my-4">Entrar</button>
                 </div>
               </form>
             </div>
@@ -194,7 +199,7 @@
               <a href="#" class="text-light"><small>Esqueceu sua senha?</small></a>
             </div>
             <div class="col-6 text-right">
-              <a href="register.php" class="text-light"><small>Cadastrar</small></a>
+              <a href="#" class="text-light"><small>Contato</small></a>
             </div>
           </div>
         </div>

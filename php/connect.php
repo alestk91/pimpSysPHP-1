@@ -1,14 +1,8 @@
 <?php
-
-function connect()
-{
-    $host = ''; //hostname
-    $user = '';
+    $host = 'localhost'; //hostname
+    $user = 'root';
     $pw = '';
-    $schema = ''; //$$db
-    $con = '';
+    $schema = 'pimpsys'; //$$db
 
     $con = mysqli_connect($host, $user, $pw, $schema) or die('Falha ao conectar ao banco de dados');
-    return $con;
-}
 ?>

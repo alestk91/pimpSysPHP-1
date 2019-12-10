@@ -3,9 +3,20 @@
 
   if(!isset($_SESSION)) session_start();
 
-  // if(!isset($_SESSION['usr_id'])) header('Location: login.php');
+  if(!isset($_SESSION['usr_id'])) header('Location: login.php');
 
-  $title = "Perfil";
+  if(!isset($_SESSION['comp_id'])) header('Location: login.php');
+  
+  $id = $_SESSION['usr_id'];
+
+  $sqlProfile = "SELECT user, ur.name, u._iduser, u.email, c._idCompany, c.companyName 
+  FROM tbusers AS u 
+  INNER JOIN tbastuser_roles AS r ON u._idUser = r._idUser 
+  INNER JOIN tbuserroles AS ur ON ur._idUserRole = r._idUserRole
+  INNER JOIN tbcompanies AS c ON u._idCompany = c._idCompany 
+  WHERE u._iduser = $id";
+  $resultProfile = mysqli_query($con,$sqlProfile) or die('Falha ao buscar perfil');
+
 ?>
 
 <!--
@@ -27,7 +38,7 @@
 <html lang="en">
 
 <head>
-  <title><?= $title ?></title>
+  <title><?= $title = "Perfil" ?></title>
   <?php include("../templates/head.html")?>
 </head>
 
@@ -50,9 +61,11 @@
       <div class="container-fluid d-flex align-items-center">
         <div class="row">
           <div class="col-lg-7 col-md-10">
-            <h1 class="display-2 text-white">Olá, Nome do cliente</h1>
+            <h1 class="display-2 text-white">Olá!</h1>
             <p class="text-white mt-0 mb-5">Esta é a sua página de perfil. Você pode ver o progresso que fez no seu trabalho e gerenciar seus projetos ou tarefas atribuídas</p>
-            <a href="#!" class="btn btn-info">Editar perfil</a>
+            <?php if($_SESSION['sts_cli'] == '1') : ?>
+              <a href="#!" class="btn btn-info">Editar perfil</a>
+            <?php endif ?>
           </div>
         </div>
       </div>
@@ -66,7 +79,7 @@
               <div class="col-lg-3 order-lg-2">
                 <div class="card-profile-image">
                   <a href="#">
-                    <img src="../assets/img/theme/team-4-800x800.jpg" class="rounded-circle">
+                    <img alt="Image placeholder" src="../assets/img/theme/bootstrap.jpg">
                   </a>
                 </div>
               </div>
@@ -131,42 +144,50 @@
             <div class="card-body">
               <form>
                 <h6 class="heading-small text-muted mb-4">Informações do usuário</h6>
-                <div class="pl-lg-4">
-                  <div class="row">
-                    <div class="col-lg-6">
-                      <div class="form-group">
-                        <label class="form-control-label" for="input-username">Username</label>
-                        <input type="text" id="input-username" class="form-control form-control-alternative" placeholder="Username" value="lucky.jesse" disabled=" " >
+                  <?php while($usuarioProfile = mysqli_fetch_array($resultProfile)) : ?>
+                    <div class="pl-lg-4">
+                      <div class="row">
+                        <div class="col-lg-6">
+                          <div class="form-group">
+                            <label class="form-control-label" for="input-username">Username</label>
+                            <input type="text" id="input-username" class="form-control form-control-alternative" placeholder="Username" value="<?= $usuarioProfile['user']?>" disabled=" " >
+                          </div>
+                        </div>
+                        <div class="col-lg-6">
+                          <div class="form-group">
+                            <label class="form-control-label" for="input-email">Email</label>
+                            <input type="email" id="input-email" class="form-control form-control-alternative" placeholder="<?= $usuarioProfile['email']?>" disabled=" ">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-lg-6">
+                          <div class="form-group">
+                            <label class="form-control-label" for="input-first-name">Nome</label>
+                            <input type="text" id="input-first-name" class="form-control form-control-alternative" placeholder="First name" value="Vinicius" disabled=" ">
+                          </div>
+                        </div>
+                        <div class="col-lg-6">
+                          <div class="form-group">
+                            <label class="form-control-label" for="input-last-name">Sobrenome</label>
+                            <input type="text" id="input-last-name" class="form-control form-control-alternative" placeholder="Last name" value="Pucci" disabled=" ">
+                          </div>
+                        </div>
+                        <div class="col-lg-6">
+                          <div class="form-group">
+                            <label class="form-control-label" for="input-username">Nível</label>
+                            <input type="text" id="input-username" class="form-control form-control-alternative"  value="<?= $usuarioProfile['name']?>" disabled=" " >
+                          </div>
+                        </div>
+                        <div class="col-lg-6">
+                          <div class="form-group">
+                            <label class="form-control-label" for="input-username">Companhia</label>
+                            <input type="text" id="input-username" class="form-control form-control-alternative"  value="<?= $usuarioProfile['companyName']?>" disabled=" " >
+                          </div>
+                        </div>
                       </div>
                     </div>
-                    <div class="col-lg-6">
-                      <div class="form-group">
-                        <label class="form-control-label" for="input-email">Email</label>
-                        <input type="email" id="input-email" class="form-control form-control-alternative" placeholder="vinicius.pucci@example.com" disabled=" ">
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-lg-6">
-                      <div class="form-group">
-                        <label class="form-control-label" for="input-first-name">Nome</label>
-                        <input type="text" id="input-first-name" class="form-control form-control-alternative" placeholder="First name" value="Vinicius" disabled=" ">
-                      </div>
-                    </div>
-                    <div class="col-lg-6">
-                      <div class="form-group">
-                        <label class="form-control-label" for="input-last-name">Sobrenome</label>
-                        <input type="text" id="input-last-name" class="form-control form-control-alternative" placeholder="Last name" value="Pucci" disabled=" ">
-                      </div>
-                    </div>
-                    <div class="col-lg-6">
-                      <div class="form-group">
-                        <label class="form-control-label" for="input-username">Nível</label>
-                        <input type="text" id="input-username" class="form-control form-control-alternative" placeholder="Username" value="Administrador" disabled=" " >
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                  <?php endwhile ?>
                 <hr class="my-4" />
                 <!-- Address -->
                 <h6 class="heading-small text-muted mb-4">Informação de contato</h6>

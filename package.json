@@ -45,5 +45,9 @@
     "gulp-sourcemaps": "^2.6.4",
     "gulp-open": "^3.0.1"
   },
-  "homepage": "http://demos.creative-tim.com/argon-dashboard/index.html"
+  "homepage": "http://demos.creative-tim.com/argon-dashboard/index.html",
+  "dependencies": {
+    "inputmask": "^5.0.0",
+    "sweetalert2": "^9.4.3"
+  }
 }
