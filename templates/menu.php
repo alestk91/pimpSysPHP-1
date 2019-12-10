@@ -127,7 +127,7 @@
     <?php endif ?>
     <li class="nav-item">
       <a class="nav-link" href="registerCompanies.php">
-        <i class="ni ni-circle-08 text-blue"></i> Registrar compania
+        <i class="ni ni-circle-08 text-blue"></i> Registrar companhia
       </a>
     </li>
   </ul>

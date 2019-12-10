@@ -61,9 +61,11 @@
       <div class="container-fluid d-flex align-items-center">
         <div class="row">
           <div class="col-lg-7 col-md-10">
-            <h1 class="display-2 text-white">Olá, nome do usuario</h1>
+            <h1 class="display-2 text-white">Olá!</h1>
             <p class="text-white mt-0 mb-5">Esta é a sua página de perfil. Você pode ver o progresso que fez no seu trabalho e gerenciar seus projetos ou tarefas atribuídas</p>
-            <a href="#!" class="btn btn-info">Editar perfil</a>
+            <?php if($_SESSION['sts_cli'] == '1') : ?>
+              <a href="#!" class="btn btn-info">Editar perfil</a>
+            <?php endif ?>
           </div>
         </div>
       </div>
