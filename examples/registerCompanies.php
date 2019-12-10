@@ -179,41 +179,6 @@
                 window.location.href = 'register.php';
             }
         })
-        // $(document).ready(function(){
-        //     $('.date').mask('00/00/0000');
-        //     $('.time').mask('00:00:00');
-        //     $('.date_time').mask('00/00/0000 00:00:00');
-        //     $('.cep').mask('00000-000');
-        //     $('.phone').mask('0000-0000');
-        //     $('.phone_with_ddd').mask('(00) 0000-0000');
-        //     $('.phone_us').mask('(000) 000-0000');
-        //     $('.mixed').mask('AAA 000-S0S');
-        //     $('.cpf').mask('000.000.000-00', {reverse: true});
-        //     $('.cnpj').inputmask('00.000.000/0000-00', {reverse: true});
-        //     $('.money').mask('000.000.000.000.000,00', {reverse: true});
-        //     $('.money2').mask("#.##0,00", {reverse: true});
-        //     $('.ip_address').mask('0ZZ.0ZZ.0ZZ.0ZZ', {
-        //       translation: {
-        //         'Z': {
-        //           pattern: /[0-9]/, optional: true
-        //         }
-        //       }
-        //     });
-        //     $('.ip_address').mask('099.099.099.099');
-        //     $('.percent').mask('##0,00%', {reverse: true});
-        //     $('.clear-if-not-match').mask("00/00/0000", {clearIfNotMatch: true});
-        //     $('.placeholder').mask("00/00/0000", {placeholder: "__/__/____"});
-        //     $('.fallback').mask("00r00r0000", {
-        //         translation: {
-        //           'r': {
-        //             pattern: /[\/]/,
-        //             fallback: '/'
-        //           },
-        //           placeholder: "__/__/____"
-        //         }
-        //       });
-        //     $('.selectonfocus').mask("00/00/0000", {selectOnFocus: true});
-        //   });
       </script>
 
       <?php
@@ -241,7 +206,7 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="ni ni-badge"></i></span>
                     </div>
-                    <input name="cnpjComp" class="form-control" placeholder="CNPJ" type="text">
+                    <input name="cnpjComp" id="cnpj" class="form-control" data-mask="00.000.000/0000-00" placeholder="CNPJ" type="text">
                   </div>
                 </div>
                 <div class="form-group">
@@ -249,7 +214,7 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="ni ni-mobile-button"></i></span>
                     </div>
-                    <input name="telComp" class="form-control" placeholder="Telefone" type="text">
+                    <input name="telComp" class="form-control" data-mask="(00) 0 0000-0000" placeholder="Celular" type="text">
                   </div>
                 </div>
                 <div class="form-group">
@@ -257,7 +222,7 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="ni ni-email-83"></i></span>
                     </div>
-                    <input name="emailComp" class="form-control" placeholder="Email" type="text">
+                    <input name="emailComp" class="form-control" placeholder="Email" type="email">
                   </div>
                 </div>
                 <div class="text-center">

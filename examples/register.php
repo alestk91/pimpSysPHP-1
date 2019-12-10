@@ -64,7 +64,7 @@
 <html lang="en">
 
 <head>
-  <title><?= $title = "Registrar";?></title>
+  <title><?= $title = "Registrar funcionário";?></title>
   <?php include("../templates/head.html") ?>
 </head>
 
@@ -244,7 +244,7 @@
                   </div>
                   <div class="form-group">
                     <select name="company" class="form-control" id="exampleFormControlSelect1">
-                      <option disable>Compania</option>
+                      <option disable>Companhia</option>
                       <?php while($company = mysqli_fetch_array($resultCompany)) : ?>
                         <option value="<?php echo $company['_idCompany']?>"><?php echo $company['companyname']?></option>
                       <?php endwhile ?>
